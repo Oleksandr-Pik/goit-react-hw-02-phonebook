@@ -1,8 +1,9 @@
-import ContactForm from 'components/ContactForm/ContactForm';
-import ContactList from 'components/ContactList/ContactList';
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
+import ContactForm from 'components/ContactForm/ContactForm';
+import ContactList from 'components/ContactList/ContactList';
 import Filter from 'components/Filter/Filter';
+import { Container } from './App.styled';
 
 class App extends Component {
   state = {
@@ -16,11 +17,18 @@ class App extends Component {
   };
 
   createContact = data => {
+    const contacts = this.state.contacts;
+    
+    if (this.isContactAlreadyExist(contacts, data)) {
+      alert(`${data.name} is already in contact`)
+      return
+    }
+
     const newContact = {
       ...data,
       id: nanoid(10),
     };
-    console.log('newContact :>> ', newContact);
+    
     this.setState(({ contacts }) => ({
       contacts: [newContact, ...contacts],
     }));
@@ -35,6 +43,12 @@ class App extends Component {
   changeFilter = e => {
     this.setState({ filter: e.target.value });
   };
+
+  isContactAlreadyExist =(contacts, data) => {
+    return contacts.find(contact =>
+      contact.name === (data.name)
+    )
+  }
 
   getVisibleContacts = () => {
     const {filter, contacts} = this.state;
@@ -51,7 +65,7 @@ class App extends Component {
     const visibleContacts = this.getVisibleContacts();
 
     return (
-      <>
+      <Container>
         <h1>Phonebook</h1>
         <ContactForm contacts={contacts} createContact={this.createContact} />
 
@@ -61,7 +75,7 @@ class App extends Component {
           contacts={visibleContacts}
           onDeleteContact={this.deleteContact}
         />
-      </>
+      </Container>
     );
   }
 }
