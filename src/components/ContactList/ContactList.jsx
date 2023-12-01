@@ -3,7 +3,11 @@ import ContactListItem from 'components/ContactListItem/ContactListItem';
 
 const ContactList = ({ contacts, onDeleteContact }) => (
   <ul>
-    <ContactListItem contacts={contacts} onDeleteContact={onDeleteContact} />
+    {contacts.map(contact => (
+      <li key={contact.id}>
+        <ContactListItem contact={contact} onDeleteContact={onDeleteContact} />
+      </li>
+    ))}
   </ul>
 );
 
